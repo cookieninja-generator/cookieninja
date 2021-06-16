@@ -61,13 +61,14 @@ def is_vcs_installed(repo_type):
 def clone(
     repo_url: str,
     checkout: Optional[str] = None,
+    recurse_submodules: bool = False,
     clone_to_dir: "os.PathLike[str]" = ".",
     no_input: bool = False,
 ):
     """Clone a repo to the current directory.
-
     :param repo_url: Repo URL of unknown type.
     :param checkout: The branch, tag or commit ID to checkout after clone.
+    :param recurse_submodules: Clone submodules if set to `True`
     :param clone_to_dir: The directory to clone to.
                          Defaults to the current directory.
     :param no_input: Do not prompt for user input and eventually force a refresh of
@@ -88,17 +89,20 @@ def clone(
 
     repo_url = repo_url.rstrip("/")
     repo_name = os.path.split(repo_url)[1]
-    if repo_type == "git":
-        repo_name = repo_name.split(":")[-1].rsplit(".git")[0]
+    _repo_args = {'git': ['git', 'clone'],
+                  'hg': ['hg', 'clone'],
+                  }
+    clone_command = _repo_args[repo_type] # avoid warnign if defined in if-elif
+    if repo_type == 'git':
+        repo_name = repo_name.split(':')[-1].rsplit('.git')[0]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    if repo_type == "git-remote-codecommit":
-        # override repo type as it is a git extension
-        repo_type = "git"
-        repo_name = repo_name.split("@")[-1]
+        if recurse_submodules:
+            clone_command.append('--recurse-submodules')
+
+    elif repo_type == 'hg':
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    if repo_type == "hg":
-        repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    logger.debug(f"repo_dir is {repo_dir}")
+    clone_command.append(repo_url)
+    logger.debug(f'repo_dir is {repo_dir}')
 
     if os.path.isdir(repo_dir):
         clone = prompt_and_delete(repo_dir, no_input=no_input)
@@ -108,7 +112,7 @@ def clone(
     if clone:
         try:
             subprocess.check_output(  # nosec
-                [repo_type, "clone", repo_url],
+                clone_command,
                 cwd=clone_to_dir,
                 stderr=subprocess.STDOUT,
             )

@@ -90,6 +90,11 @@ def list_installed_templates(default_config, passed_config_file):
     "for advanced repositories with multi templates in it",
 )
 @click.option(
+    '--recurse-submodules', help='recursively checkout git submodules',
+    is_flag=True,
+    default=False
+)
+@click.option(
     "-v", "--verbose", is_flag=True, help="Print debug information", default=False
 )
 @click.option(
@@ -157,6 +162,7 @@ def main(
     extra_context,
     no_input,
     checkout,
+    recurse_submodules,
     verbose,
     replay,
     overwrite_if_exists,
@@ -205,6 +211,7 @@ def main(
             template,
             checkout,
             no_input,
+            recurse_submodules=recurse_submodules,
             extra_context=extra_context,
             replay=replay,
             overwrite_if_exists=overwrite_if_exists,
