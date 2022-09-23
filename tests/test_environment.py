@@ -18,8 +18,8 @@ def test_env_should_raise_for_unknown_extension():
 def test_env_should_come_with_default_extensions():
     """Verify default extensions loaded with StrictEnvironment."""
     env = StrictEnvironment(keep_trailing_newline=True)
-    assert 'jinja2_time.jinja2_time.TimeExtension' in env.extensions
     assert 'cookieninja.extensions.JsonifyExtension' in env.extensions
     assert 'cookieninja.extensions.RandomStringExtension' in env.extensions
     assert 'cookieninja.extensions.SlugifyExtension' in env.extensions
+    assert 'cookieninja.extensions.TimeExtension' in env.extensions
     assert 'cookieninja.extensions.UUIDExtension' in env.extensions
