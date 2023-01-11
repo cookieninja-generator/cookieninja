@@ -13,7 +13,7 @@ requirements = [
     'pyyaml>=5.3.1',
     'python-slugify>=4.0.0',
     'requests>=2.23.0',
-    'arrow',
+    'arrow>=0.9.0',
 ]
 
 setup(
