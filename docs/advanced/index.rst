@@ -27,3 +27,4 @@ Various advanced topics regarding cookieninja usage.
    new_line_characters
    local_extensions
    nested_config_files
+   jinja2_custom_delimiter
