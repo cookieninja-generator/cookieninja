@@ -1,15 +1,13 @@
 Dependent Questions
 -------------------
 
-.. versionadded:: 2.2.0
-
 Dependent questions are questions that should be presented only if another question is answered with a trueful answer.
 
 For example, consider the following ``cookiecutter.json``::
 
    {
        "is_storage": true,
-       "access_mode?{{is_storage}}": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"],
+       "access_mode?{{cookiecutter.is_storage}}": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"],
        "app": "app"
    }
 
@@ -41,7 +39,7 @@ For example::
 
     {
       "queue": ["kafka", "rabbit"],
-      "topic?{{queue=='kafka'}}": "topic",
+      "topic?{{cookiecutter.queue=='kafka'}}": "topic",
       "app": "app"
     }
 

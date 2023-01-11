@@ -232,11 +232,11 @@ def main(
     except (
         UndefinedVariableInTemplate,
         InvalidBooleanExpression,
-    ) as undefined_err:
-        click.echo(f'{undefined_err.message}')
-        click.echo(f'Error message: {undefined_err.error.message}')
+    ) as e:
+        click.echo(f'{e.message}')
+        click.echo(f'Error message: {e.error.message}')
 
-        context_str = json.dumps(undefined_err.context, indent=4, sort_keys=True)
+        context_str = json.dumps(e.context, indent=4, sort_keys=True)
         click.echo(f'Context: {context_str}')
         sys.exit(1)
 

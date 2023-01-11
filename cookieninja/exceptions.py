@@ -165,7 +165,7 @@ class InvalidZipRepository(CookiecutterException):
 
 class InvalidBooleanExpression(CookiecutterException):
     """
-    Exception for bad boolean expression.
+    Exception for an invalid boolean expression.
 
-    Raised when the specified boolean expression cannot parse.
+    Raised when the specified boolean expression cannot be parsed.
     """

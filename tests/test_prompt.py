@@ -95,22 +95,32 @@ class TestPrompt:
                 {'key': 'default'},
             ),
             ({'cookiecutter': {'key?{{False}}': 'default'}}, {'key': 'default'}),
+            (
+                {
+                    "cookiecutter": {
+                        "is_storage": "yes",
+                        "access_mode?{{cookiecutter.is_storage=='yes'}}": [
+                            "ReadWriteOnce",
+                            "ReadOnlyMany",
+                            "ReadWriteMany",
+                        ],
+                        "app": "app",
+                    }
+                },
+                {"is_storage": "yes", "access_mode": "ReadWriteOnce", "app": "app"},
+            ),
         ],
         ids=[
             'true dependent question',
             'false dependent question',
+            'true dependent question with variable',
         ],
     )
     def test_prompt_for_config_dependent_question(
         self, monkeypatch, context, expected_dict
     ):
         """Verify `prompt_for_config` call `read_user_variable` on text request."""
-        monkeypatch.setattr(
-            'cookieninja.prompt.read_user_variable',
-            lambda var, default: default,
-        )
-
-        cookiecutter_dict = prompt.prompt_for_config(context)
+        cookiecutter_dict = prompt.prompt_for_config(context, True)
         assert cookiecutter_dict == expected_dict
 
     def test_prompt_for_config_dict(self, monkeypatch):
@@ -502,25 +512,25 @@ class TestParseQuestionExpression(object):
         [
             (
                 {"is_storage": True},
-                "access_mode?{{is_storage}}",
+                "access_mode?{{cookiecutter.is_storage}}",
                 "access_mode",
                 True,
             ),
             (
                 {"is_storage": False},
-                "access_mode?{{is_storage}}",
+                "access_mode?{{cookiecutter.is_storage}}",
                 "access_mode",
                 False,
             ),
             (
                 {"queue": "kafka"},
-                "topic?{{queue=='kafka'}}",
+                "topic?{{cookiecutter.queue=='kafka'}}",
                 "topic",
                 True,
             ),
             (
                 {"queue": "rabbit"},
-                "topic?{{queue=='kafka'}}",
+                "topic?{{cookiecutter.queue=='kafka'}}",
                 "topic",
                 False,
             ),
@@ -531,24 +541,24 @@ class TestParseQuestionExpression(object):
     ):
         """Verify successful parses of question."""
         env = environment.StrictEnvironment()
-        context = None
+        context = {"cookiecutter": cookiecutter_dict}
         assert (
             actual_key,
             should_present_question,
-        ) == prompt.parse_question_expression(context, cookiecutter_dict, env, key)
+        ) == prompt.parse_question_expression(context, env, key)
 
     @pytest.mark.parametrize(
         'cookiecutter_dict, key, actual_key, should_present_question',
         [
             (
                 {"is_storage": True},
-                "access_mode?{{is_storag}}",
+                "access_mode?{{cookiecutter.is_storage}}",
                 "access_mode",
                 True,
             ),
             (
                 {"queue": "rabbit"},
-                "topic?{{queue==kafka'}}",
+                "topic?{{cookiecutter.queue==kafka'}}",
                 "topic",
                 False,
             ),
@@ -561,4 +571,4 @@ class TestParseQuestionExpression(object):
         env = environment.StrictEnvironment()
         context = None
         with pytest.raises(exceptions.InvalidBooleanExpression):
-            prompt.parse_question_expression(context, cookiecutter_dict, env, key)
+            prompt.parse_question_expression(context, env, key)

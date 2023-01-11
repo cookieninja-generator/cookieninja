@@ -202,6 +202,7 @@ def prompt_for_config(context, no_input=False):
     # values might refer to them.
     for key, raw in context['cookiecutter'].items():
         no_input_current = no_input
+
         try:
             rendered_raw = render_variable(env, raw, cookiecutter_dict)
         except UndefinedError as err:
@@ -216,10 +217,10 @@ def prompt_for_config(context, no_input=False):
             continue
 
         if "?" in key:
-            actual_kay, should_present_question = parse_question_expression(
-                context, cookiecutter_dict, env, key
+            actual_key, should_present_question = parse_question_expression(
+                context, env, key
             )
-            key = actual_kay
+            key = actual_key
             if not should_present_question:
                 no_input_current = True
 
@@ -264,21 +265,18 @@ def prompt_for_config(context, no_input=False):
     return cookiecutter_dict
 
 
-def parse_question_expression(context, cookiecutter_dict, env, key):
+def parse_question_expression(context, env, key):
     """Parse the question that the user entered.
 
     :param context: Source for field names and sample values.
-    :param cookiecutter_dict: The values that already set.
     :param env: A Jinja2 Environment object.
     :param key: The key of the prompt variable.
     """
     try:
-        actual_kay, dependant_variable = key.split("?")
-        boolean_expression = env.from_string(dependant_variable).render(
-            **cookiecutter_dict
-        )
+        actual_key, dependant_variable = key.split("?")
+        boolean_expression = env.from_string(dependant_variable).render(**context)
         should_present_question = boolean_expression == "True"
     except Exception as err:
         msg = f"Unable to render dependent question - {key}"
         raise InvalidBooleanExpression(msg, err, context) from err
-    return actual_kay, should_present_question
+    return actual_key, should_present_question
