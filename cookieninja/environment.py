@@ -26,8 +26,8 @@ class ExtensionLoaderMixin:
             'cookieninja.extensions.JsonifyExtension',
             'cookieninja.extensions.RandomStringExtension',
             'cookieninja.extensions.SlugifyExtension',
+            'cookieninja.extensions.TimeExtension',
             'cookieninja.extensions.UUIDExtension',
-            'jinja2_time.TimeExtension',
         ]
         extensions = default_extensions + self._read_extensions(context)
 
