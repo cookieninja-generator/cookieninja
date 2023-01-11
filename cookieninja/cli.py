@@ -17,6 +17,7 @@ from .exceptions import (
     RepositoryNotFound,
     UndefinedVariableInTemplate,
     UnknownExtension,
+    InvalidBooleanExpression,
 )
 from .log import configure_logger
 from .main import cookiecutter
@@ -228,11 +229,14 @@ def main(
     ) as e:
         click.echo(e)
         sys.exit(1)
-    except UndefinedVariableInTemplate as undefined_err:
-        click.echo(f'{undefined_err.message}')
-        click.echo(f'Error message: {undefined_err.error.message}')
+    except (
+        UndefinedVariableInTemplate,
+        InvalidBooleanExpression,
+    ) as e:
+        click.echo(f'{e.message}')
+        click.echo(f'Error message: {e.error.message}')
 
-        context_str = json.dumps(undefined_err.context, indent=4, sort_keys=True)
+        context_str = json.dumps(e.context, indent=4, sort_keys=True)
         click.echo(f'Context: {context_str}')
         sys.exit(1)
 

@@ -87,6 +87,42 @@ class TestPrompt:
         cookiecutter_dict = prompt.prompt_for_config(context)
         assert cookiecutter_dict == context['cookiecutter']
 
+    @pytest.mark.parametrize(
+        'context, expected_dict',
+        [
+            (
+                {'cookiecutter': {'key?{{True}}': 'default'}},
+                {'key': 'default'},
+            ),
+            ({'cookiecutter': {'key?{{False}}': 'default'}}, {'key': 'default'}),
+            (
+                {
+                    "cookiecutter": {
+                        "is_storage": "yes",
+                        "access_mode?{{cookiecutter.is_storage=='yes'}}": [
+                            "ReadWriteOnce",
+                            "ReadOnlyMany",
+                            "ReadWriteMany",
+                        ],
+                        "app": "app",
+                    }
+                },
+                {"is_storage": "yes", "access_mode": "ReadWriteOnce", "app": "app"},
+            ),
+        ],
+        ids=[
+            'true dependent question',
+            'false dependent question',
+            'true dependent question with variable',
+        ],
+    )
+    def test_prompt_for_config_dependent_question(
+        self, monkeypatch, context, expected_dict
+    ):
+        """Verify `prompt_for_config` call `read_user_variable` on text request."""
+        cookiecutter_dict = prompt.prompt_for_config(context, no_input=True)
+        assert cookiecutter_dict == expected_dict
+
     def test_prompt_for_config_dict(self, monkeypatch):
         """Verify `prompt_for_config` call `read_user_variable` on dict request."""
         monkeypatch.setattr(
@@ -466,3 +502,73 @@ def test_undefined_variable(context):
     error = err.value
     assert error.message == "Unable to render variable 'foo'"
     assert error.context == context
+
+
+class TestParseQuestionExpression(object):
+    """Class to unite parse question expression prompt related tests."""
+
+    @pytest.mark.parametrize(
+        'cookiecutter_dict, key, actual_key, should_present_question',
+        [
+            (
+                {"is_storage": True},
+                "access_mode?{{cookiecutter.is_storage}}",
+                "access_mode",
+                True,
+            ),
+            (
+                {"is_storage": False},
+                "access_mode?{{cookiecutter.is_storage}}",
+                "access_mode",
+                False,
+            ),
+            (
+                {"queue": "kafka"},
+                "topic?{{cookiecutter.queue=='kafka'}}",
+                "topic",
+                True,
+            ),
+            (
+                {"queue": "rabbit"},
+                "topic?{{cookiecutter.queue=='kafka'}}",
+                "topic",
+                False,
+            ),
+        ],
+    )
+    def test_successful_parses(
+        self, cookiecutter_dict, key, actual_key, should_present_question
+    ):
+        """Verify successful parses of question."""
+        env = environment.StrictEnvironment()
+        context = {"cookiecutter": cookiecutter_dict}
+        assert (
+            actual_key,
+            should_present_question,
+        ) == prompt.parse_question_expression(context, env, key)
+
+    @pytest.mark.parametrize(
+        'cookiecutter_dict, key, actual_key, should_present_question',
+        [
+            (
+                {"is_storage": True},
+                "access_mode?{{cookiecutter.is_storage}}",
+                "access_mode",
+                True,
+            ),
+            (
+                {"queue": "rabbit"},
+                "topic?{{cookiecutter.queue==kafka'}}",
+                "topic",
+                False,
+            ),
+        ],
+    )
+    def test_failed_parses(
+        self, cookiecutter_dict, key, actual_key, should_present_question
+    ):
+        """Verify successful parses of question."""
+        env = environment.StrictEnvironment()
+        context = None
+        with pytest.raises(exceptions.InvalidBooleanExpression):
+            prompt.parse_question_expression(context, env, key)
