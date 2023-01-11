@@ -120,7 +120,7 @@ class TestPrompt:
         self, monkeypatch, context, expected_dict
     ):
         """Verify `prompt_for_config` call `read_user_variable` on text request."""
-        cookiecutter_dict = prompt.prompt_for_config(context, True)
+        cookiecutter_dict = prompt.prompt_for_config(context, no_input=True)
         assert cookiecutter_dict == expected_dict
 
     def test_prompt_for_config_dict(self, monkeypatch):
