@@ -63,12 +63,12 @@ def read_user_choice(var_name, options):
     if not options:
         raise ValueError
 
-    choice_map = OrderedDict((f'{i}', value) for i, value in enumerate(options, 1))
+    choice_map = OrderedDict((f"{i}", value) for i, value in enumerate(options, 1))
     choices = choice_map.keys()
-    default = '1'
+    default = "1"
 
-    choice_lines = ['{} - {}'.format(*c) for c in choice_map.items()]
-    prompt = '\n'.join(
+    choice_lines = ["{} - {}".format(*c) for c in choice_map.items()]
+    prompt = "\n".join(
         (
             f"Select {var_name}:",
             "\n".join(choice_lines),
@@ -82,7 +82,7 @@ def read_user_choice(var_name, options):
     return choice_map[user_choice]
 
 
-DEFAULT_DISPLAY = 'default'
+DEFAULT_DISPLAY = "default"
 
 
 def process_json(user_value, default_value=None):
@@ -98,11 +98,11 @@ def process_json(user_value, default_value=None):
         user_dict = json.loads(user_value, object_pairs_hook=OrderedDict)
     except Exception as error:
         # Leave it up to click to ask the user again
-        raise click.UsageError('Unable to decode to JSON.') from error
+        raise click.UsageError("Unable to decode to JSON.") from error
 
     if not isinstance(user_dict, dict):
         # Leave it up to click to ask the user again
-        raise click.UsageError('Requires JSON dict.')
+        raise click.UsageError("Requires JSON dict.")
 
     return user_dict
 
@@ -200,7 +200,7 @@ def prompt_for_config(context, no_input=False):
     # First pass: Handle simple and raw variables, plus choices.
     # These must be done first because the dictionaries keys and
     # values might refer to them.
-    for key, raw in context['cookiecutter'].items():
+    for key, raw in context["cookiecutter"].items():
         no_input_current = no_input
 
         try:
@@ -209,10 +209,10 @@ def prompt_for_config(context, no_input=False):
             msg = f"Unable to render variable '{key}'"
             raise UndefinedVariableInTemplate(msg, err, context) from err
 
-        if key.startswith('_') and not key.startswith('__'):
+        if key.startswith("_") and not key.startswith("__"):
             cookiecutter_dict[key] = raw
             continue
-        elif key.startswith('__'):
+        elif key.startswith("__"):
             cookiecutter_dict[key] = rendered_raw
             continue
 
@@ -248,16 +248,16 @@ def prompt_for_config(context, no_input=False):
             cookiecutter_dict[key] = val
 
     # Second pass; handle the dictionaries.
-    for key, raw in context['cookiecutter'].items():
+    for key, raw in context["cookiecutter"].items():
         # Skip private type dicts not to be rendered.
-        if key.startswith('_') and not key.startswith('__'):
+        if key.startswith("_") and not key.startswith("__"):
             continue
 
         if isinstance(raw, dict):
             # We are dealing with a dict variable
             val = render_variable(env, raw, cookiecutter_dict)
 
-            if not no_input and not key.startswith('__'):
+            if not no_input and not key.startswith("__"):
                 val = read_user_dict(key, val)
 
             cookiecutter_dict[key] = val

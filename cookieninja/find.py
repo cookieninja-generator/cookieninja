@@ -17,11 +17,11 @@ def find_template(repo_dir: "os.PathLike[str]", environment: Environment) -> Pat
     :param environment: The jinja2 environment.
     :return: Relative path to project template.
     """
-    logger.debug('Searching %s for the project template.', repo_dir)
+    logger.debug("Searching %s for the project template.", repo_dir)
 
     for str_path in os.listdir(repo_dir):
         if (
-            'cookiecutter' in str_path
+            "cookiecutter" in str_path
             and environment.variable_start_string in str_path
             and environment.variable_end_string in str_path
         ):
@@ -30,5 +30,5 @@ def find_template(repo_dir: "os.PathLike[str]", environment: Environment) -> Pat
     else:
         raise NonTemplatedInputDirException
 
-    logger.debug('The project template appears to be %s', project_template)
+    logger.debug("The project template appears to be %s", project_template)
     return project_template
