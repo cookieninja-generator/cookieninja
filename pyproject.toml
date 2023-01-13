@@ -1,4 +1,2 @@
 [tool.black]
 exclude = '/(tests/hooks-abort-render/hooks|docs\/HelloCookieCutter1)/'
-line-length = 88
-target-version = ['py39']
