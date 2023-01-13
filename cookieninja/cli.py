@@ -90,9 +90,10 @@ def list_installed_templates(default_config, passed_config_file):
     "for advanced repositories with multi templates in it",
 )
 @click.option(
-    '--recurse-submodules', help='recursively checkout git submodules',
+    '--recurse-submodules',
+    help='recursively checkout git submodules',
     is_flag=True,
-    default=False
+    default=False,
 )
 @click.option(
     "-v", "--verbose", is_flag=True, help="Print debug information", default=False

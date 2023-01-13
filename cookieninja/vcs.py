@@ -66,6 +66,7 @@ def clone(
     no_input: bool = False,
 ):
     """Clone a repo to the current directory.
+
     :param repo_url: Repo URL of unknown type.
     :param checkout: The branch, tag or commit ID to checkout after clone.
     :param recurse_submodules: Clone submodules if set to `True`
@@ -89,17 +90,20 @@ def clone(
 
     repo_url = repo_url.rstrip("/")
     repo_name = os.path.split(repo_url)[1]
-    _repo_args = {'git': ['git', 'clone'],
-                  'hg': ['hg', 'clone'],
-                  }
-    clone_command = _repo_args[repo_type] # avoid warnign if defined in if-elif
+
+    repo_args = {
+        'git': ['git', 'clone'],
+        'hg': ['hg', 'clone'],
+    }
+    clone_command = repo_args[repo_type]  # avoid warning if defined in if-elif
     if repo_type == 'git':
+        # git repository.
         repo_name = repo_name.split(':')[-1].rsplit('.git')[0]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
         if recurse_submodules:
             clone_command.append('--recurse-submodules')
-
-    elif repo_type == 'hg':
+    else:
+        # hg repository.
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
     clone_command.append(repo_url)
     logger.debug(f'repo_dir is {repo_dir}')
