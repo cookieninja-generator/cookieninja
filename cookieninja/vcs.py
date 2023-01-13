@@ -39,12 +39,12 @@ def identify_repo(repo_url):
         else:
             raise UnknownRepoType
     else:
-        if 'git' in repo_url:
-            return 'git', repo_url
-        elif 'codecommit' in repo_url:
-            return 'git-remote-codecommit', repo_url
-        elif 'bitbucket' in repo_url:
-            return 'hg', repo_url
+        if "git" in repo_url:
+            return "git", repo_url
+        elif "codecommit" in repo_url:
+            return "git-remote-codecommit", repo_url
+        elif "bitbucket" in repo_url:
+            return "hg", repo_url
         else:
             raise UnknownRepoType
 
@@ -91,12 +91,12 @@ def clone(
     if repo_type == "git":
         repo_name = repo_name.split(":")[-1].rsplit(".git")[0]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    if repo_type == 'git-remote-codecommit':
+    if repo_type == "git-remote-codecommit":
         # override repo type as it is a git extension
-        repo_type = 'git'
-        repo_name = repo_name.split('@')[-1]
+        repo_type = "git"
+        repo_name = repo_name.split("@")[-1]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    if repo_type == 'hg':
+    if repo_type == "hg":
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
     logger.debug(f"repo_dir is {repo_dir}")
 

@@ -24,16 +24,16 @@ def test_is_zip_file(zipfile):
 
 @pytest.fixture(
     params=[
-        'gitolite@server:team/repo',
-        'git@github.com:audreyfeldroy/cookiecutter.git',
-        'https://github.com/cookiecutter/cookiecutter.git',
-        'git+https://private.com/gitrepo',
-        'hg+https://private.com/mercurialrepo',
-        'https://bitbucket.org/pokoli/cookiecutter.hg',
-        'file://server/path/to/repo.git',
-        'codecommit://cookiecutter',
-        'codecommit://test@cookiecutter',
-        'codecommit::eu-central-1://test@cookiecutter',
+        "gitolite@server:team/repo",
+        "git@github.com:audreyfeldroy/cookiecutter.git",
+        "https://github.com/cookiecutter/cookiecutter.git",
+        "git+https://private.com/gitrepo",
+        "hg+https://private.com/mercurialrepo",
+        "https://bitbucket.org/pokoli/cookiecutter.hg",
+        "file://server/path/to/repo.git",
+        "codecommit://cookiecutter",
+        "codecommit://test@cookiecutter",
+        "codecommit::eu-central-1://test@cookiecutter",
     ]
 )
 def remote_repo_url(request):
