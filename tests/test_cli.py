@@ -98,11 +98,11 @@ def test_cli_verbose(cli_runner):
 
 def test_user_config_recurse_submodules(mocker, cli_runner, user_config_path):
     """Test cli invocation works with `recurse-submodules` option."""
-    mock_cookiecutter = mocker.patch('cookieninja.cli.cookiecutter')
+    mock_cookiecutter = mocker.patch("cookieninja.cli.cookiecutter")
 
-    template_path = 'tests/fake-repo-pre/'
+    template_path = "tests/fake-repo-pre/"
     result = cli_runner(
-        template_path, '--config-file', user_config_path, '--recurse-submodules'
+        template_path, "--config-file", user_config_path, "--recurse-submodules"
     )
 
     assert result.exit_code == 0
@@ -114,7 +114,7 @@ def test_user_config_recurse_submodules(mocker, cli_runner, user_config_path):
         replay=False,
         overwrite_if_exists=False,
         skip_if_file_exists=False,
-        output_dir='.',
+        output_dir=".",
         config_file=user_config_path,
         default_config=False,
         extra_context=None,

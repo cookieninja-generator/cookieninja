@@ -58,7 +58,7 @@ def test_local_repo_typo(template, user_config_data, cloned_cookiecutter_path):
             checkout=None,
             no_input=True,
             recurse_submodules=False,
-            directory='wrong-dir',
+            directory="wrong-dir",
         )
 
     wrong_full_cookiecutter_path = os.path.join(
