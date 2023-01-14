@@ -221,6 +221,10 @@ def test_clone_unknown_subprocess_error(mocker, clone_dir):
             ["git", "clone", "--recurse-submodules", "https://github.com/foo/bar"],
         ),
         (
+            "codecommit://cookiecutter",
+            ["git", "clone", "--recurse-submodules", "codecommit://cookiecutter"],
+        ),
+        (
             "https://bitbucket.org/foo/bar",
             ["hg", "clone", "https://bitbucket.org/foo/bar"],
         ),

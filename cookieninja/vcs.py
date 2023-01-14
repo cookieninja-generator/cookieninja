@@ -93,12 +93,19 @@ def clone(
 
     repo_args = {
         "git": ["git", "clone"],
+        "git-remote-codecommit": ["git", "clone"],
         "hg": ["hg", "clone"],
     }
     clone_command = repo_args[repo_type]  # avoid warning if defined in if-elif
-    if repo_type == "git":
+    if "git" == repo_type:
         # git repository.
         repo_name = repo_name.split(":")[-1].rsplit(".git")[0]
+        repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
+        if recurse_submodules:
+            clone_command.append("--recurse-submodules")
+    elif "git-remote-codecommit" == repo_type:
+        repo_type = "git"
+        repo_name = repo_name.split("@")[-1]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
         if recurse_submodules:
             clone_command.append("--recurse-submodules")
