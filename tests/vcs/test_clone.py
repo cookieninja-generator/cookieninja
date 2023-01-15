@@ -211,3 +211,48 @@ def test_clone_unknown_subprocess_error(mocker, clone_dir):
             clone_to_dir=str(clone_dir),
             no_input=True,
         )
+
+
+@pytest.mark.parametrize(
+    "url, expected_clone_args",
+    [
+        (
+            "https://github.com/foo/bar",
+            ["git", "clone", "--recurse-submodules", "https://github.com/foo/bar"],
+        ),
+        (
+            "codecommit://cookiecutter",
+            ["git", "clone", "--recurse-submodules", "codecommit://cookiecutter"],
+        ),
+        (
+            "https://bitbucket.org/foo/bar",
+            ["hg", "clone", "https://bitbucket.org/foo/bar"],
+        ),
+    ],
+)
+def test_clone_recurse_submodules(mocker, clone_dir, url, expected_clone_args):
+    """Tests cloning submodules recursively.
+
+    Tests the fix for issue #48.
+    This test should result in the `--recurse-submodules` flag being added to the
+    `git clone` commands, and no flags added to `hg clone` commands.
+    """
+    mocker.patch("cookieninja.vcs.is_vcs_installed", autospec=True, return_value=True)
+
+    mock_subprocess = mocker.patch(
+        "cookieninja.vcs.subprocess.check_output",
+        autospec=True,
+    )
+
+    vcs.clone(
+        url,
+        recurse_submodules=True,
+        clone_to_dir=clone_dir,
+        no_input=True,
+    )
+
+    mock_subprocess.assert_called_once_with(
+        expected_clone_args,
+        cwd=clone_dir,
+        stderr=subprocess.STDOUT,
+    )

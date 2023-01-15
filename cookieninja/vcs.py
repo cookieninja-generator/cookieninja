@@ -61,6 +61,7 @@ def is_vcs_installed(repo_type):
 def clone(
     repo_url: str,
     checkout: Optional[str] = None,
+    recurse_submodules: bool = False,
     clone_to_dir: "os.PathLike[str]" = ".",
     no_input: bool = False,
 ):
@@ -68,6 +69,7 @@ def clone(
 
     :param repo_url: Repo URL of unknown type.
     :param checkout: The branch, tag or commit ID to checkout after clone.
+    :param recurse_submodules: Clone submodules if set to `True`
     :param clone_to_dir: The directory to clone to.
                          Defaults to the current directory.
     :param no_input: Do not prompt for user input and eventually force a refresh of
@@ -88,16 +90,29 @@ def clone(
 
     repo_url = repo_url.rstrip("/")
     repo_name = os.path.split(repo_url)[1]
-    if repo_type == "git":
+
+    repo_args = {
+        "git": ["git", "clone"],
+        "git-remote-codecommit": ["git", "clone"],
+        "hg": ["hg", "clone"],
+    }
+    clone_command = repo_args[repo_type]  # avoid warning if defined in if-elif
+    if "git" == repo_type:
+        # git repository.
         repo_name = repo_name.split(":")[-1].rsplit(".git")[0]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    if repo_type == "git-remote-codecommit":
-        # override repo type as it is a git extension
+        if recurse_submodules:
+            clone_command.append("--recurse-submodules")
+    elif "git-remote-codecommit" == repo_type:
         repo_type = "git"
         repo_name = repo_name.split("@")[-1]
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
-    if repo_type == "hg":
+        if recurse_submodules:
+            clone_command.append("--recurse-submodules")
+    else:
+        # hg repository.
         repo_dir = os.path.normpath(os.path.join(clone_to_dir, repo_name))
+    clone_command.append(repo_url)
     logger.debug(f"repo_dir is {repo_dir}")
 
     if os.path.isdir(repo_dir):
@@ -108,7 +123,7 @@ def clone(
     if clone:
         try:
             subprocess.check_output(  # nosec
-                [repo_type, "clone", repo_url],
+                clone_command,
                 cwd=clone_to_dir,
                 stderr=subprocess.STDOUT,
             )
