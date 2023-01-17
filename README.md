@@ -9,10 +9,10 @@
 
 A command-line utility that creates projects from **cookiecutters** (project templates), e.g. creating a Python package project from a Python package project template.
 
-- Documentation: [https://cookiecutter.readthedocs.io](https://cookiecutter.readthedocs.io)
-- GitHub: [https://github.com/cookiecutter/cookiecutter](https://github.com/cookiecutter/cookiecutter)
+- Documentation: [https://cookieninja.readthedocs.io](https://cookieninja.readthedocs.io)
+- GitHub: [https://github.com/cookieninja-generator/cookieninja](https://github.com/cookieninja-generator/cookieninja)
 - PyPI: [https://pypi.org/project/cookieninja/](https://pypi.org/project/cookieninja/)
-- Free and open source software: [BSD license](https://github.com/cookiecutter/cookiecutter/blob/master/LICENSE)
+- Free and open source software: [BSD license](https://github.com/cookieninja-generator/cookieninja/blob/main/LICENSE)
 
 <img src="https://raw.githubusercontent.com/cookieninja-generator/cookieninja/main/logo/cookieninja_small.jpg" width="400" height="400">
 
