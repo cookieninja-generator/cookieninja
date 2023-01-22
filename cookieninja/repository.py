@@ -6,8 +6,6 @@ from .exceptions import RepositoryNotFound
 from .vcs import clone
 from .zipfile import unzip
 
-from typing import NamedTuple, Optional
-
 
 REPO_REGEX = re.compile(
     r"""
@@ -22,13 +20,6 @@ REPO_REGEX = re.compile(
 """,
     re.VERBOSE,
 )
-
-
-class AbbreviationResult(NamedTuple):
-    """The result from an expansion of an abbreviation."""
-
-    expansion: str
-    directory: Optional[str]
 
 
 def is_repo_url(value):
@@ -57,10 +48,10 @@ def expand_abbreviations(template, abbreviations):
             directory = expansion.get("directory", None)
             expansion = expansion["expansion"]
         if rest:
-            return AbbreviationResult(expansion.format(rest), directory)
-        return AbbreviationResult(expansion, directory)
+            return expansion.format(rest), directory
+        return expansion, directory
 
-    return AbbreviationResult(template, None)
+    return template, None
 
 
 def repository_has_cookiecutter_json(repo_directory):
