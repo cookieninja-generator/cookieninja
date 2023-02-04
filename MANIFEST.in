@@ -1,10 +1,9 @@
 include AUTHORS.md
+include CHANGELOG.md
 include CODE_OF_CONDUCT.md
 include CONTRIBUTING.md
-include HISTORY.md
 include LICENSE
 include README.md
-include CHANGELOG.md
 
 exclude Makefile
 exclude __main__.py

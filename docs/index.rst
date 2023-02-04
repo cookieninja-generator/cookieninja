@@ -42,7 +42,7 @@ Project Info
 
    CONTRIBUTING
    AUTHORS
-   HISTORY
+   CHANGELOG
    case_studies
    CODE_OF_CONDUCT
 
