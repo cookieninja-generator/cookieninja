@@ -1,2 +1,109 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cookieninja"
+dynamic = ["version"]
+description = """
+A command-line utility that creates projects from project templates,
+e.g. creating a Python package project from a Python package project template.
+"""
+readme = "README.md"
+license = "BSD-3-Clause"
+requires-python = ">=3.7"
+authors = [
+    { name = "Yuval Dolev & Lior Weissman", email = "cookieninja.gen@gmail.com" },
+]
+keywords = [
+    "Jinja2",
+    "Python",
+    "cookiecutter",
+    "cookieninja",
+    "package",
+    "packaging",
+    "project directory",
+    "project templates",
+    "projects",
+    "scaffolding",
+    "skeleton",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development",
+]
+dependencies = [
+    "arrow>=0.9.0",
+    "binaryornot>=0.4.4",
+    "click>=7.0,<9.0.0",
+    "Jinja2>=2.7,<4.0.0",
+    "python-slugify>=4.0.0",
+    "pyyaml>=5.3.1",
+    "requests>=2.23.0",
+]
+
+[project.scripts]
+cookieninja = "cookieninja.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/cookieninja-generator/cookieninja"
+
+# Hatch Config
+[tool.hatch.version]
+path = "cookieninja/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/cookieninja",
+]
+
+[tool.hatch.envs.dev]
+dependencies = [
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "freezegun",
+    "safety",
+    "pre-commit",
+    "nox",
+]
+[tool.hatch.envs.dev.scripts]
+safety_tests = "safety check --full-report"
+tests = "pytest -cov-report=html -cov-report=xml -cov-branch -cov-fail-under=100"
+lint = "pre-commit run --all-files"
+
+[tool.hatch.envs.docs]
+dependencies = [
+    "sphinx-rtd-theme>=1.0.0",
+    "sphinx-click>=4.1.0",
+    "myst-parser>=0.17.2",
+    "sphinx-autobuild>=2021.3.14",
+    "Sphinx>=4.5.0",
+    "sphinxcontrib-apidoc>=0.3.0",
+    "sphinx-autodoc-typehints>=1.18.2",
+]
+[tool.hatch.envs.docs.scripts]
+build = "sphinx-build -b html -W --keep-going docs/ docs/_build/html"
+autobuild = """
+sphinx-autobuild -a docs/ docs/_build/html
+--open-browser --port 9812
+--watch . --watch docs/ --watch cookieninja/
+"""
+
+# Tool config
 [tool.black]
 exclude = '/(tests/hooks-abort-render/hooks|docs\/HelloCookieCutter1)/'
