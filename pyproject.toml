@@ -1,2 +1,71 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cookieninja"
+dynamic = ["version"]
+description = "A command-line utility that creates projects from project templates, e.g. creating a Python package project from a Python package project template."
+readme = "README.md"
+license = "BSD"
+requires-python = ">=3.7"
+authors = [
+    { name = "Yuval Dolev & Lior Weissman", email = "cookieninja.gen@gmail.com" },
+]
+keywords = [
+    "Jinja2",
+    "Python",
+    "cookiecutter",
+    "cookieninja",
+    "package",
+    "packaging",
+    "project directory",
+    "project templates",
+    "projects",
+    "scaffolding",
+    "skeleton",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development",
+]
+dependencies = [
+    "arrow>=0.9.0",
+    "binaryornot>=0.4.4",
+    "click>=7.0,<9.0.0",
+    "Jinja2>=2.7,<4.0.0",
+    "python-slugify>=4.0.0",
+    "pyyaml>=5.3.1",
+    "requests>=2.23.0",
+]
+
+[project.scripts]
+cookieninja = "cookieninja.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/cookieninja-generator/cookieninja"
+
+[tool.hatch.version]
+path = "cookieninja/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/cookieninja",
+]
+
 [tool.black]
 exclude = '/(tests/hooks-abort-render/hooks|docs\/HelloCookieCutter1)/'
