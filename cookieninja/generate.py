@@ -7,6 +7,7 @@ import shutil
 import warnings
 from collections import OrderedDict
 from pathlib import Path
+from typing import Optional, Any, MutableMapping, Mapping
 from binaryornot.check import is_binary
 from jinja2 import FileSystemLoader, Environment
 from jinja2.exceptions import TemplateSyntaxError, UndefinedError
@@ -79,7 +80,7 @@ def apply_overwrites_to_context(context, overwrite_context):
 
 def generate_context(
     context_file="cookiecutter.json", default_context=None, extra_context=None
-):
+) -> MutableMapping[str, Any]:
     """Generate the context for a Cookiecutter project template.
 
     Loads the JSON file as a Python object, with key being the JSON filename.
@@ -124,7 +125,13 @@ def generate_context(
     return context
 
 
-def generate_file(project_dir, infile, context, env, skip_if_file_exists=False):
+def generate_file(
+    project_dir: str,
+    infile: str,
+    context: Mapping[str, Any],
+    env: Environment,
+    skip_if_file_exists=False,
+):
     """Render filename of infile as name of outfile, handle infile correctly.
 
     Dealing with infile appropriately:
@@ -204,7 +211,7 @@ def generate_file(project_dir, infile, context, env, skip_if_file_exists=False):
 
 def render_and_create_dir(
     dirname: str,
-    context: dict,
+    context: Mapping[str, Any],
     output_dir: "os.PathLike[str]",
     environment: Environment,
     overwrite_if_exists: bool = False,
@@ -273,9 +280,9 @@ def _run_hook_from_repo_dir(
 
 
 def generate_files(
-    repo_dir,
-    context=None,
-    output_dir=".",
+    repo_dir: "os.PathLike[str]",
+    context: Optional[Mapping[str, Any]] = None,
+    output_dir: "os.PathLike[str]" = ".",
     overwrite_if_exists=False,
     skip_if_file_exists=False,
     accept_hooks=True,

@@ -5,6 +5,7 @@ The code in this module is also a good example of how to use Cookiecutter as a
 library rather than a script.
 """
 from copy import copy
+from typing import Optional, Union, Any, Mapping
 import logging
 import os
 import sys
@@ -22,18 +23,18 @@ logger = logging.getLogger(__name__)
 
 
 def cookiecutter(
-    template,
-    checkout=None,
+    template: str,
+    checkout: Optional[str] = None,
     no_input=False,
     recurse_submodules=False,
-    extra_context=None,
-    replay=None,
+    extra_context: Optional[Mapping[str, Any]] = None,
+    replay: Union[str, bool, None] = None,
     overwrite_if_exists=False,
-    output_dir=".",
-    config_file=None,
+    output_dir: "os.PathLike[str]" = ".",
+    config_file: Optional[str] = None,
     default_config=False,
-    password=None,
-    directory=None,
+    password: Optional[str] = None,
+    directory: Optional[str] = None,
     skip_if_file_exists=False,
     accept_hooks=True,
     keep_project_on_failure=False,

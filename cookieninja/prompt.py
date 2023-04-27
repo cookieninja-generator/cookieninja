@@ -3,6 +3,7 @@ import functools
 import json
 from collections import OrderedDict
 import ast
+from typing import Any, Mapping
 
 import click
 from jinja2.exceptions import UndefinedError
@@ -188,7 +189,7 @@ def prompt_choice_for_config(cookiecutter_dict, env, key, options, no_input):
     return read_user_choice(key, rendered_options)
 
 
-def prompt_for_config(context, no_input=False):
+def prompt_for_config(context: Mapping[str, Any], no_input=False):
     """Prompt user to enter a new config.
 
     :param dict context: Source for field names and sample values.

@@ -5,6 +5,7 @@ cookiecutter.replay.
 """
 import json
 import os
+from typing import Any, Mapping
 
 from .utils import make_sure_path_exists
 
@@ -16,7 +17,9 @@ def get_file_name(replay_dir, template_name):
     return os.path.join(replay_dir, file_name)
 
 
-def dump(replay_dir: "os.PathLike[str]", template_name: str, context: dict):
+def dump(
+    replay_dir: "os.PathLike[str]", template_name: str, context: Mapping[str, Any]
+):
     """Write json data to file."""
     make_sure_path_exists(replay_dir)
 
@@ -35,7 +38,7 @@ def dump(replay_dir: "os.PathLike[str]", template_name: str, context: dict):
         json.dump(context, outfile, indent=2)
 
 
-def load(replay_dir, template_name):
+def load(replay_dir, template_name) -> Mapping[str, Any]:
     """Read json data from file."""
     if not isinstance(template_name, str):
         raise TypeError("Template name is required to be of type str")

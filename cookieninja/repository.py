@@ -1,6 +1,7 @@
 """Cookiecutter repository functions."""
 import os
 import re
+from typing import Tuple
 
 from .exceptions import RepositoryNotFound
 from .vcs import clone
@@ -77,7 +78,7 @@ def determine_repo_dir(
     recurse_submodules=False,
     password=None,
     directory=None,
-):
+) -> Tuple["os.PathLike[str]", bool]:
     """
     Locate the repository directory from a template reference.
 
